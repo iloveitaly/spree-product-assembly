@@ -1,10 +1,8 @@
 <p>
-  <%= f.label :can_be_part, t("can_be_part")%><br />
-  <%= f.check_box(:can_be_part) %>
+  <%= f.label :can_be_part, t(:can_be_part)%> <%= f.check_box(:can_be_part) %>
 </p>
 <p>
-  <%= f.label :individual_sale, t("individual_sale")%><br />
-  <%= f.check_box(:individual_sale) %>
+  <%= f.label :individual_sale, t(:individual_sale)%> <%= f.check_box(:individual_sale) %>
 </p>
 
 <% if @product.assembly? %>

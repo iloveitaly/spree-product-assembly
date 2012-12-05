@@ -7,8 +7,7 @@ class Spree::AssembliesPart < ActiveRecord::Base
   end
 
   def save
-    Spree::AssembliesPart.update_all("count = #{count}", 
-        ["assembly_id = ? AND part_id = ?", assembly_id, part_id])
+    Spree::AssembliesPart.update_all("count = #{count}", ["assembly_id = ? AND part_id = ?", assembly_id, part_id])
   end
 
   def destroy
