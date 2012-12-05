@@ -4,12 +4,12 @@ describe Spree::InventoryUnit do
   before(:each) do
     @product = Factory(:product)
     
-    @part_product_1 = Factory(:product, :can_be_part => true)
+    @part_product_1 = Factory(:product, :can_be_part => true, :weight => 0.1)
     @part1 = @part_product_1.master
     @part1.on_hand = 5
     @part1.save
     
-    @part_product_2 = Factory(:product, :can_be_part => true)
+    @part_product_2 = Factory(:product, :can_be_part => true, :weight => 0.1)
     @part2 = @part_product_2.master
     @part2.on_hand = 16
     @part2.save

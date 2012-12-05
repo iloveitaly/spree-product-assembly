@@ -107,13 +107,13 @@ describe Spree::Product do
 
   describe "Spree::Product Assembly" do
     before(:each) do
-      @product = Factory(:product)
+      @product = FactoryGirl.create(:product, :weight => 0.1)
       
-      @part_product_1 = Factory(:product, :can_be_part => true)
+      @part_product_1 = FactoryGirl.create(:product, :can_be_part => true, :weight => 0.1)
       @part1 = @part_product_1.master
       @part1.on_hand = 5
       
-      @part_product_2 = Factory(:product, :can_be_part => true)
+      @part_product_2 = FactoryGirl.create(:product, :can_be_part => true, :weight => 0.1)
       @part2 = @part_product_2.master
       @part2.on_hand = 16
       
