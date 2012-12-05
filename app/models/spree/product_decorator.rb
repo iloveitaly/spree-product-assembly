@@ -1,5 +1,4 @@
 Spree::Product.class_eval do
-  
   has_and_belongs_to_many  :assemblies, :class_name => "Spree::Product",
         :join_table => "spree_assemblies_parts",
         :foreign_key => "part_id", :association_foreign_key => "assembly_id"
@@ -11,6 +10,7 @@ Spree::Product.class_eval do
 
   scope :individual_saled, where(["spree_products.individual_sale = ?", true])
 
+  # TODO really don't like the idea of overriding the active scope
   scope :active, lambda { |*args|
     not_deleted.individual_saled.available(nil, args.first)
   }
@@ -41,6 +41,8 @@ Spree::Product.class_eval do
     end
   end
 
+  # add/remove/set seems really messy; should be cleaned up
+
   def add_part(variant, count = 1)
     ap = Spree::AssembliesPart.get(self.id, variant.id)
     if ap
@@ -49,6 +51,15 @@ Spree::Product.class_eval do
     else
       self.parts << variant
       set_part_count(variant, count) if count > 1
+    end
+
+    # TODO this should be configurable
+    unless self.has_variants?
+      self.master.update_attributes({
+        :sku => self.parts.map(&:sku).join("-"),
+        # :price => self.parts.map(&:price).sum,
+        :weight => self.parts.map(&:weight).sum,
+      })
     end
   end
 
@@ -85,8 +96,7 @@ Spree::Product.class_eval do
   end
 
   def count_of(variant)
-    ap = Spree::AssembliesPart.get(self.id, variant.id)
-    ap ? ap.count : 0
+    Spree::AssembliesPart.get(self.id, variant.id).try(:count) || 0
   end
 
 end
