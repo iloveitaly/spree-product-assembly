@@ -19,17 +19,18 @@ class Spree::Admin::PartsController < Spree::Admin::BaseController
   end
 
   def available
-    if params[:q].blank?
-      @available_products = []
-    else
-      query = "%#{params[:q]}%"
-      @available_products = Spree::Product.not_deleted.available.joins(:master).where("(spree_products.name #{LIKE} ? OR spree_variants.sku #{LIKE} ?) AND can_be_part = ?", query, query, true).limit(30)
-      
-      @available_products.uniq!
+    @available_products = []
+
+    if params[:q].present?
+      @available_products = Spree::Product.not_deleted.available.limit(30).search(
+        :variants_sku_or_name_cont => params[:q],
+        :can_be_part_eq => true,
+        :id_not_eq => @product.id
+      ).result(:distinct => true)
     end
+
     respond_to do |format|
-      format.html {render :layout => false}
-      format.js {render :layout => false}
+      format.js { render :layout => false }
     end
   end
 
